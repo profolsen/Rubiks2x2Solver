@@ -136,16 +136,13 @@ public class Cube2x2 {
     }
 
     public static void main(String[] args) {
-        System.out.println(SOLVED.equals(SOLVED));
-        //System.out.println(SOLVED.hashCode());
-        //System.out.println(SOLVED.equals(SOLVED.r().r().r().r().r().r()));
+        Scanner scan = new Scanner(System.in);
         Surface start = new Surface(new Corner[] {
-                new Corner(1, 0),
-                new Corner(3, 0),
-                new Corner(2, 2),
-                new Corner(4, 1),
+                new Corner(scan.nextInt(), scan.nextInt()),
+                new Corner(scan.nextInt(), scan.nextInt()),
+                new Corner(scan.nextInt(), scan.nextInt()),
+                new Corner(scan.nextInt(), scan.nextInt())
         });
-        //System.out.println(start.hashCode());
         System.out.println(start);
         HashMap<Surface, String> reached = closure(start);
         System.out.println(reached.get(SOLVED));
