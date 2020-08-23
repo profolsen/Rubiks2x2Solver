@@ -7,14 +7,14 @@ All the following terms assume the solved layer is facing up.
 + r -- This operation is R'BRBFB'F' in a more familiar notation.  
 + c -- a clockwise rotation of the cube.
 + target -- the correct position for a corner piece in the unsolved layer: they are numbered clockwise from top-left (i.e., top-left = 1, top-right = 2, bottom-right = 3, bottom-left = 4).
-+ orientation -- the orientation of a particular corner piece it can be one of three values: correct (= 0), clockwise rotated (= 1), counter-clockwise rotated (= 2).
++ cycle -- the cycle of a particular corner piece it can be one of three values: correct (= 0), clockwise rotated (= 1), counter-clockwise rotated (= 2).
 
 ## Input to the program:
 The input is done via the command line. 
-For each corner piece, enter in first its target and then its orientation, separating all values with whitespace.
+For each corner piece, enter in first its target and then its cycle, separating all values with whitespace.
 After the final value, hit enter to run the program.
 Follow the instructions and watch the cube get solved.
-Be careful about your orientation during the solve.
+Be careful about your cycle during the solve.
 
 ## Considerations and Future Work
 It is interesting to note that a 2x2x2 cube can be solved using only two operations, one of which is just rotating the cube.

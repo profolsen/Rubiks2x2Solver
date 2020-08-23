@@ -9,7 +9,7 @@ import java.util.*;
 public class Cube2x2 {
 
     //represents a solved state for the unsolved layer.
-    private static final Surface SOLVED = new Surface(new Corner[] {
+    private static final Surface2x2 SOLVED = new Surface2x2(new Corner[] {
             new Corner(1, 0),
             new Corner(2, 0),
             new Corner(3, 0),
@@ -18,13 +18,13 @@ public class Cube2x2 {
 
     //Does a breadth first search of all possible states of the unsolved layer to find the one
     //solved state.
-    private static HashMap<Surface, String> closure(Surface start) {
-        LinkedList<Surface> queue = new LinkedList<Surface>();
-        HashMap<Surface, String> answer = new HashMap<Surface, String>();
+    private static HashMap<Surface2x2, String> closure(Surface2x2 start) {
+        LinkedList<Surface2x2> queue = new LinkedList<Surface2x2>();
+        HashMap<Surface2x2, String> answer = new HashMap<Surface2x2, String>();
         queue.add(start);
         answer.put(start, "");
         while(!queue.isEmpty()) {
-            Surface n = queue.removeFirst();
+            Surface2x2 n = queue.removeFirst();
             if(! answer.containsKey(n.r())) {
                 answer.put(n.r(), answer.get(n) + "r --> " + n.r() + "\n");
                 queue.addLast(n.r());
@@ -44,14 +44,14 @@ public class Cube2x2 {
     //the main method.  run this if you need to solve a cube.
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
-        Surface start = new Surface(new Corner[] {
+        Surface2x2 start = new Surface2x2(new Corner[] {
                 new Corner(scan.nextInt(), scan.nextInt()),
                 new Corner(scan.nextInt(), scan.nextInt()),
                 new Corner(scan.nextInt(), scan.nextInt()),
                 new Corner(scan.nextInt(), scan.nextInt())
         });
         System.out.println(start);
-        HashMap<Surface, String> reached = closure(start);
+        HashMap<Surface2x2, String> reached = closure(start);
         System.out.println(reached.get(SOLVED));
         System.out.println(reached.size());
     }
@@ -102,52 +102,52 @@ class Corner {
     }
 }
 //a class that represents one side of a rubik's cube.
-class Surface {
+class Surface2x2 {
     Corner[] corners;  //the four corners, stored in clockwise order starting at the top left.
                         //assuming the solved layer is face up.
 
     //creates a new Surface with a given state.
-    public Surface(Corner[] corners) {
+    public Surface2x2(Corner[] corners) {
         this.corners = corners;
     }
 
     //computes the result of the r operation without altering this surface.
-    public Surface r() {
+    public Surface2x2 r() {
         Corner[] result = new Corner[4];
         result[0] = corners[0].rotateClockwise();
         result[1] = corners[1];
         result[2] = corners[3];
         result[3] = corners[2].rotateCounterClockwise();
-        return new Surface(result);
+        return new Surface2x2(result);
     }
 
     //computes the result of the c operation without altering this surface.
-    public Surface c() {
+    public Surface2x2 c() {
         Corner[] result = new Corner[4];
         result[0] = corners[3].shiftRight();
         result[1] = corners[0].shiftRight();
         result[2] = corners[1].shiftRight();
         result[3] = corners[2].shiftRight();
-        return new Surface(result);
+        return new Surface2x2(result);
     }
 
     //computes the result of the c2 (currently unused) operation without altering this surface.
-    public Surface c2() {
+    public Surface2x2 c2() {
         Corner[] result = new Corner[4];
         result[0] = corners[3];
         result[1] = corners[0];
         result[2] = corners[1];
         result[3] = corners[2];
-        return new Surface(result);
+        return new Surface2x2(result);
     }
 
     //again, see java.lang.Object.equals.
     public boolean equals(Object other) {
-        if(other instanceof Surface) {
-            return  corners[0].equals(((Surface) other).corners[0]) &&
-                    corners[1].equals(((Surface) other).corners[1]) &&
-                    corners[2].equals(((Surface) other).corners[2]) &&
-                    corners[3].equals(((Surface) other).corners[3]);
+        if(other instanceof Surface2x2) {
+            return  corners[0].equals(((Surface2x2) other).corners[0]) &&
+                    corners[1].equals(((Surface2x2) other).corners[1]) &&
+                    corners[2].equals(((Surface2x2) other).corners[2]) &&
+                    corners[3].equals(((Surface2x2) other).corners[3]);
         }
         return false;
     }
