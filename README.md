@@ -18,6 +18,6 @@ Be careful about your orientation during the solve.
 
 ## Considerations and Future Work
 It is interesting to note that a 2x2x2 cube can be solved using only two operations, one of which is just rotating the cube.
-I believe, that because the code uses a BFS to generate solution instructions, that it generates the shortest possible solution in terms of number of operations (r and c both counting a single operation).
+I believe that because the code uses a BFS to generate solution instructions, that it generates the shortest possible solution in terms of number of operations (r and c both counting a single operation).
 Future work would consist of extending this work to also generate solutions for the unsolved layer of a 3x3x3 (solving the top two layers is easy).
 
