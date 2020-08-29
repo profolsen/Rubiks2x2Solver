@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 /**
@@ -15,19 +16,19 @@ public class Surface {
     /** The state of a solved cube. */
     public static final Surface SOLVED = new Surface(
         new Piece[] {
-                Piece.solved(0, 4, 3),
-                Piece.solved(1, 4, 3),
-                Piece.solved(2, 4, 3),
-                Piece.solved(3, 4, 3),
+                new Piece(0, 4, 0, 3),
+                new Piece(1, 4, 0, 3),
+                new Piece(2, 4, 0, 3),
+                new Piece(3, 4, 0, 3),
         }, new Piece[] {
-            Piece.solved(0, 8, 2),
-            Piece.solved(1, 8, 2),
-            Piece.solved(2, 8, 2),
-            Piece.solved(3, 8, 2),
-            Piece.solved(4, 8, 2),
-            Piece.solved(5, 8, 2),
-            Piece.solved(6, 8, 2),
-            Piece.solved(7, 8, 2),
+            new Piece(0, 8, 0, 2),
+            new Piece(1, 8, 0, 2),
+            new Piece(2, 8, 0, 2),
+            new Piece(3, 8, 0, 2),
+            new Piece(4, 8, 0, 2),
+            new Piece(5, 8, 0, 2),
+            new Piece(6, 8, 0, 2),
+            new Piece(7, 8, 0, 2),
         }
     );
 
@@ -87,25 +88,60 @@ public class Surface {
         return new Surface(resultC, resultE);
     }
 
-    public HashMap<Surface, String> bfs() {
+    /**
+     * Returns the number of edges/corners of s2 that are in a different orientation than this Surface.
+     * @param s2 another surface.
+     * @param orientedCorners if true, will return Integer.MAX_VALUE if one corner is different in any way.
+     * @param orientedEdges if true, will return Integer.MAX_VALUE if one edge is different in any way.
+     * @return the number of differently positioned pieces between the two surfaces.
+     */
+    public int positionalDifference(Surface s2, boolean orientedCorners, boolean orientedEdges) {
+        int total = 0;
+        for(int k = 0; k < 4; k++) {
+            total += (corners[k].target.orientation() != s2.corners[k].target.orientation() ? 1 : 0);
+            if(orientedCorners && !corners[k].equals(s2.corners[k])) return Integer.MAX_VALUE;
+        }
+        for(int k = 0; k < 8; k++) {
+            total += (edges[k].target.orientation() != s2.edges[k].target.orientation() ? 1 : 0);
+            if(orientedCorners && !edges[k].equals(s2.edges[k])) return Integer.MAX_VALUE;
+        }
+        return total;
+    }
+
+    /**
+     * Returns true if two surfaces have the same pieces in the same place regardless of how each
+     * piece is oriented.
+     * @param s2 another Surface.
+     * @return true if both surfaces have the same pieces in the same places.
+     */
+    public boolean samePositions(Surface s2) {
+        return positionalDifference(s2, false, false) == 0;
+    }
+
+    public HashMap<Surface, String> bfs(int diffCount, boolean orientedCorners, boolean orientedEdges) {
         LinkedList<Surface> queue = new LinkedList<Surface>();
         HashMap<Surface, String> answer = new HashMap<Surface, String>();
         queue.add(this);
         answer.put(this, "");
+        long report = System.currentTimeMillis() + 5000;
         while(!queue.isEmpty()) {
             Surface n = queue.removeFirst();
             if(! answer.containsKey(n.r())) {
-                answer.put(n.r(), answer.get(n) + "r");
+                answer.put(n.r(), ""/*answer.get(n) + "r"*/);
                 queue.addLast(n.r());
             }
             if(! answer.containsKey(n.c())) {
-                answer.put(n.c(), answer.get(n) + "c");
+                answer.put(n.c(), ""/*answer.get(n) + "c"*/);
                 queue.addLast(n.c());
             }
-            /*if(! answer.containsKey(n.c2())) {
-                answer.put(n.c2(), answer.get(n) + "c2");
-                queue.addLast(n.c2());
-            }*/
+            if((!equals(n.c()) && positionalDifference(n.c(), orientedCorners, orientedEdges) <= diffCount) ||
+                    (!equals(n.r()) && positionalDifference(n.r(), orientedCorners, orientedEdges) <= diffCount)) {
+                return answer;
+            }
+            if(System.currentTimeMillis() > report) {
+                report += 5000;
+                System.out.println(answer.size());
+            }
         }
         return answer;
     }
@@ -134,6 +170,8 @@ public class Surface {
     @Override
     public boolean equals(Object o) {
         if(o instanceof Surface) {
+            return positionalDifference((Surface) o, true, true) == 0;
+            /*
             return corners[0].equals(((Surface) o).corners[0]) &&
                     corners[1].equals(((Surface) o).corners[1]) &&
                     corners[2].equals(((Surface) o).corners[2]) &&
@@ -146,6 +184,7 @@ public class Surface {
                     edges[5].equals(((Surface) o).edges[5]) &&
                     edges[6].equals(((Surface) o).edges[6]) &&
                     edges[7].equals(((Surface) o).edges[7]);
+             */
         }
         return false;
     }

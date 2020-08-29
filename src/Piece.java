@@ -7,14 +7,6 @@
 public class Piece {
 
     /**
-     * Generates a solved piece at the given position for the given number of positions
-     * and number of orientations the piece could have.
-     */
-    public static Piece solved(int position, int numPositions, int numOrientations) {
-        return new Piece(new Cycle(position, numPositions), new Cycle(0, numOrientations));
-    }
-
-    /**
      * How a piece is oriented within a rubik's cube.
      */
     public static class Cycle {
@@ -76,6 +68,17 @@ public class Piece {
     public Piece(Cycle target, Cycle orientation) {
         this.target = target;
         this.orientation = orientation;
+    }
+
+    /**
+     * Creates a piece with the given target, number of targets, orientation and number of orientations.
+     * @param position the target position of this piece.
+     * @param numPositions the number of targets total for pieces of this type.
+     * @param orientation the orientation of this piece.
+     * @param numOrientations the number of orientations this piece can be in.
+     */
+    public Piece(int position, int numPositions, int orientation, int numOrientations) {
+        this(new Cycle(position, numPositions), new Cycle(orientation, numOrientations));
     }
 
     /**
